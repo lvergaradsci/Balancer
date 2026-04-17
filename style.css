@@ -906,45 +906,46 @@ body {
         gap: 20px;
     }
 }
-/* ============ OPTIMIZACIÓN PARA MÓVILES ============ */
+/* ============ PARCHE DE EMERGENCIA PARA MÓVILES ============ */
 @media (max-width: 600px) {
-    /* Reducimos el panel superior a lo mínimo */
+    /* 1. Aplastar el panel superior */
     .top-panel {
-        padding: 5px 10px !important;
-        height: 60px !important; /* Altura fija pequeña */
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        height: 50px !important;
+        padding: 0 10px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-around !important;
+        align-items: center !important;
     }
 
-    /* Hacemos los textos muy pequeños */
-    .engineer-info h3, .level-info h3, .score-info h3 {
-        display: none; /* Escondemos las etiquetas "Ingeniero", "Nivel", etc. */
+    /* Ocultamos los textos descriptivos, dejamos solo los números */
+    .top-panel h3 {
+        display: none !important;
     }
 
+    /* Reducimos el tamaño de los valores (Ingeniero, Nivel, Score) */
     .engineer-name, .level-number, .score-value {
-        font-size: 0.9rem !important;
+        font-size: 0.8rem !important;
         margin: 0 !important;
     }
 
-    /* El nombre del ingeniero a la izquierda, nivel al centro, puntos a la derecha */
-    .engineer-info { order: 1; }
-    .level-info { order: 2; }
-    .score-info { order: 3; }
-
-    /* Achicamos los tanques laterales para que no estorben las partículas */
+    /* 2. Adelgazar los contenedores laterales (Tanques) */
     .indicators-container {
-        width: 45px !important;
-        bottom: 20px !important;
+        width: 35px !important; /* Estrechos para dejar espacio al juego */
+        height: 50% !important; /* Más bajos */
+        bottom: 10% !important;
     }
 
+    /* Etiquetas de Bienestar/Abuso muy pequeñas */
     .fluid-label {
-        font-size: 0.5rem !important;
-        letter-spacing: 0;
+        font-size: 8px !important;
+        width: 100% !important;
+        text-align: center !important;
     }
 
-    /* Subimos un poco el canvas para que no lo tape el área de controles */
+    /* 3. Ajustar el Canvas para que no se oculte */
     #gameCanvas {
-        height: 70% !important;
+        height: calc(100vh - 100px) !important;
+        top: 50px !important;
     }
 }
