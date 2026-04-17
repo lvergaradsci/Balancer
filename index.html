@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Industrial Balancer: Fábrica de Bienestar</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Pantalla de Login -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="factory-logo">
+                <div class="gear gear-1"></div>
+                <div class="gear gear-2"></div>
+                <div class="gear gear-3"></div>
+            </div>
+            <h1 class="game-title">THE INDUSTRIAL BALANCER</h1>
+            <h2 class="game-subtitle">Fábrica de Bienestar</h2>
+            
+            <div class="mission-card">
+                <p class="mission-text">🏭 Eres el <strong>Ingeniero Jefe de la Nación</strong></p>
+                <p class="mission-subtext">Tu misión: Regular el mercado y mantener lleno el <span class="highlight">Tanque de Bienestar Social</span></p>
+            </div>
+
+            <div class="authors-badge">
+                <p class="authors-title">Equipo de Supervisores:</p>
+                <p class="authors-names">Carolina Arrieta • Mateo Jiménez<br>Santiago Ávila • Luis Vergara</p>
+            </div>
+
+            <div class="input-container">
+                <input type="text" id="playerName" placeholder="Ingresa tu nombre de ingeniero..." maxlength="30" autocomplete="off">
+                <button id="startButton" class="start-btn">
+                    <span class="btn-text">INICIAR MISIÓN</span>
+                    <span class="btn-icon">⚙️</span>
+                </button>
+            </div>
+
+            <div class="login-footer">
+                <p>🎯 Objetivo: Evitar desigualdad, productos dañinos y abusos empresariales</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Juego -->
+    <div id="gameScreen" class="screen">
+        <!-- Header con indicadores -->
+        <header class="game-header">
+            <div class="header-left">
+                <h3 class="engineer-name">Ingeniero: <span id="engineerDisplay">---</span></h3>
+                <div class="level-badge">
+                    <span class="level-icon">📊</span>
+                    <span>Nivel <span id="currentLevel">1</span></span>
+                </div>
+            </div>
+
+            <div class="header-center">
+                <div class="score-display">
+                    <span class="score-label">PUNTOS</span>
+                    <span id="scoreValue" class="score-value">0</span>
+                </div>
+                <div class="combo-bar-container">
+                    <span class="combo-label">COMBO</span>
+                    <div class="combo-bar">
+                        <div id="comboFill" class="combo-fill"></div>
+                    </div>
+                    <span id="comboMultiplier" class="combo-multiplier">×1</span>
+                </div>
+            </div>
+
+            <div class="header-right">
+                <div class="indicator-panel">
+                    <div class="indicator pressure">
+                        <span class="indicator-icon">⚡</span>
+                        <div class="indicator-content">
+                            <span class="indicator-label">Presión Mercado</span>
+                            <div class="indicator-bar">
+                                <div id="pressureBar" class="bar-fill pressure-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="indicator justice">
+                        <span class="indicator-icon">⚖️</span>
+                        <div class="indicator-content">
+                            <span class="indicator-label">Nivel Justicia</span>
+                            <div class="indicator-bar">
+                                <div id="justiceBar" class="bar-fill justice-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Contenedor del juego -->
+        <main class="game-container">
+            <!-- Canvas para las animaciones de fluidos y física -->
+            <canvas id="gameCanvas"></canvas>
+            
+            <!-- Tanques de estado -->
+            <div class="tanks-container">
+                <div class="tank welfare-tank">
+                    <div class="tank-label">BIENESTAR SOCIAL</div>
+                    <div class="tank-body">
+                        <div id="welfareFluid" class="fluid welfare-fluid"></div>
+                        <div class="tank-markers">
+                            <span>100%</span>
+                            <span>50%</span>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div class="tank-value"><span id="welfareValue">0</span>%</div>
+                </div>
+
+                <div class="tank abuse-tank">
+                    <div class="tank-label">ABUSO EMPRESARIAL</div>
+                    <div class="tank-body">
+                        <div id="abuseFluid" class="fluid abuse-fluid"></div>
+                        <div class="tank-markers">
+                            <span>100%</span>
+                            <span>50%</span>
+                            <span>0%</span>
+                        </div>
+                    </div>
+                    <div class="tank-value"><span id="abuseValue">0</span>%</div>
+                </div>
+            </div>
+
+            <!-- Panel de controles del minijuego actual -->
+            <div id="gameControls" class="game-controls"></div>
+
+            <!-- Mensaje de nivel -->
+            <div id="levelMessage" class="level-message"></div>
+        </main>
+
+        <!-- Footer con instrucciones -->
+        <footer class="game-footer">
+            <div id="instructions" class="instructions">Preparando fábrica...</div>
+            <button id="pauseButton" class="icon-btn">⏸️ PAUSA</button>
+        </footer>
+    </div>
+
+    <!-- Pantalla de Nivel Completado -->
+    <div id="levelCompleteScreen" class="screen overlay-screen">
+        <div class="complete-card">
+            <div class="complete-header">
+                <h2 class="complete-title">¡NIVEL SUPERADO!</h2>
+                <div class="stars-container" id="starsContainer"></div>
+            </div>
+            
+            <div class="complete-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Puntos Ganados</span>
+                    <span id="levelPoints" class="stat-value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Combo Máximo</span>
+                    <span id="maxCombo" class="stat-value">×1</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Bienestar Final</span>
+                    <span id="finalWelfare" class="stat-value">0%</span>
+                </div>
+            </div>
+
+            <div class="supervisor-message">
+                <div class="supervisor-avatar">👨‍💼</div>
+                <p id="supervisorMessage" class="message-text"></p>
+            </div>
+
+            <button id="nextLevelBtn" class="next-btn">
+                SIGUIENTE NIVEL <span class="btn-arrow">→</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Pantalla de Game Over -->
+    <div id="gameOverScreen" class="screen overlay-screen">
+        <div class="gameover-card">
+            <h2 class="gameover-title">MISIÓN FALLIDA</h2>
+            <div class="gameover-icon">⚠️</div>
+            <p id="gameOverReason" class="gameover-reason"></p>
+            
+            <div class="final-score">
+                <span class="final-label">Puntuación Final</span>
+                <span id="finalScore" class="final-value">0</span>
+            </div>
+
+            <div class="button-group">
+                <button id="retryBtn" class="retry-btn">REINTENTAR</button>
+                <button id="leaderboardBtn" class="leaderboard-btn">VER RANKING</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pantalla de Ranking -->
+    <div id="leaderboardScreen" class="screen overlay-screen">
+        <div class="leaderboard-card">
+            <div class="leaderboard-header">
+                <h2 class="leaderboard-title">🏆 TABLA DE INGENIEROS ELITE</h2>
+                <button id="closeLeaderboard" class="close-btn">✕</button>
+            </div>
+            
+            <div id="leaderboardList" class="leaderboard-list">
+                <div class="loading-spinner">Cargando rankings...</div>
+            </div>
+
+            <button id="backToGameBtn" class="back-btn">VOLVER AL JUEGO</button>
+        </div>
+    </div>
+
+    <!-- Pantalla de Pausa -->
+    <div id="pauseScreen" class="screen overlay-screen">
+        <div class="pause-card">
+            <h2 class="pause-title">⏸️ PAUSA</h2>
+            <div class="pause-info">
+                <p>Nivel: <span id="pauseLevel">1</span></p>
+                <p>Puntos: <span id="pauseScore">0</span></p>
+            </div>
+            <div class="button-group">
+                <button id="resumeBtn" class="resume-btn">CONTINUAR</button>
+                <button id="quitBtn" class="quit-btn">SALIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data.js"></script>
+    <script src="sound.js"></script>
+    <script src="sheets.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
