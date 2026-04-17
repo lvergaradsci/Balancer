@@ -300,18 +300,42 @@ function applyValveEffect(valveType, value, level) {
 
 // CONVEYOR
 function initConveyorMinigame(level) {
-    DOM.instructions.textContent = 'Arrastra productos a su destino correcto';
+    DOM.instructions.textContent = 'Haz clic en las políticas CORRECTAS para subir el BIENESTAR';
     GameState.currentMinigame = 'conveyor';
-    
-    // Implementación simplificada
-    const html = `<div style="text-align:center; padding:40px; font-size:1.2rem;">
-        🎮 Minijuego de Cinta en Desarrollo<br>
-        <button onclick="simulateConveyorSuccess()" style="margin-top:20px; padding:15px 30px; font-size:1.1rem; background:#06FFA5; border:none; border-radius:10px; cursor:pointer;">
-            COMPLETAR NIVEL ✓
-        </button>
-    </div>`;
+
+    const politicas = [
+        { desc: "Subsidio de Vivienda", tipo: 'bien' },
+        { desc: "Evasión de Impuestos", tipo: 'mal' },
+        { desc: "Salario Mínimo Justo", tipo: 'bien' },
+        { desc: "Explotación Infantil", tipo: 'mal' },
+        { desc: "Seguridad Social", tipo: 'bien' }
+    ];
+
+    let html = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; padding:20px;">`;
+    politicas.forEach(p => {
+        html += `
+            <button class="policy-btn" onclick="procesarPolitica('${p.tipo}', this)" 
+                style="padding:15px; background:rgba(255,255,255,0.1); border:2px solid #4ECDC4; color:white; border-radius:10px; cursor:pointer;">
+                ${p.desc}
+            </button>`;
+    });
+    html += `</div>`;
     DOM.gameControls.innerHTML = html;
 }
+
+window.procesarPolitica = function(tipo, btn) {
+    if (tipo === 'bien') {
+        GameState.welfare = Math.min(100, GameState.welfare + 20);
+        btn.style.background = "#06FFA5";
+        soundManager.playSuccess();
+    } else {
+        GameState.abuse = Math.min(100, GameState.abuse + 20);
+        btn.style.background = "#FF6B35";
+        soundManager.playError();
+    }
+    btn.disabled = true;
+    updateIndicators();
+};
 
 window.simulateConveyorSuccess = function() {
     addScore(500);
@@ -340,16 +364,31 @@ function initCircuitMinigame(level) {
 }
 
 window.connectCircuit = function(i) {
-    soundManager.playElectric();
+    soundManager.playSuccess(); // Cambiado a success para feedback claro
     addScore(200);
-    GameState.welfare = Math.min(100, GameState.welfare + 15);
-    GameState.justice = Math.min(100, GameState.justice + 10);
+    
+    // Subimos los valores para que el usuario pueda ganar
+    GameState.welfare = Math.min(100, GameState.welfare + 25);
+    GameState.justice = Math.min(100, GameState.justice + 15);
+    
+    // Reducimos un poco el abuso si conectas bien el circuito
+    GameState.abuse = Math.max(0, GameState.abuse - 5);
+    
     updateIndicators();
     
     const btns = DOM.gameControls.querySelectorAll('button');
-    btns[i].style.background = 'linear-gradient(135deg, #06FFA5, #4ECDC4)';
-    btns[i].style.boxShadow = '0 0 30px rgba(6,255,165,0.8)';
-    btns[i].disabled = true;
+    if(btns[i]) {
+        btns[i].style.background = 'linear-gradient(135deg, #06FFA5, #4ECDC4)';
+        btns[i].style.boxShadow = '0 0 30px rgba(6,255,165,0.8)';
+        btns[i].innerHTML += " ✅";
+        btns[i].disabled = true;
+    }
+
+    // Si ya conectó todos, avisar que debe esperar a que termine el tiempo
+    const todosConectados = Array.from(btns).every(b => b.disabled);
+    if (todosConectados) {
+        DOM.instructions.textContent = "¡Circuitos estables! Espera a que termine el tiempo para validar.";
+    }
 }
 
 // ============ GAME LOOP ============
@@ -507,10 +546,24 @@ function checkLevelConditions() {
 }
 
 function checkLevelCompletion(level) {
-    if (GameState.welfare >= level.targetWelfare && GameState.abuse <= level.maxAbuse) {
+    // Log para depuración: ver valores actuales vs objetivos del nivel
+    console.log(`📊 Fin del Nivel ${GameState.currentLevel}:`);
+    console.log(`Bienestar: ${GameState.welfare} (Objetivo: ${level.targetWelfare})`);
+    console.log(`Abuso: ${GameState.abuse} (Máximo: ${level.maxAbuse})`);
+
+    // Verificación de victoria
+    const cumpleBienestar = GameState.welfare >= level.targetWelfare;
+    const cumpleAbuso = GameState.abuse <= level.maxAbuse;
+
+    if (cumpleBienestar && cumpleAbuso) {
         completeLevel();
     } else {
-        failLevel(level.messages.failure);
+        // Personalizamos el mensaje de error según lo que falló
+        let motivo = level.messages.failure;
+        if (!cumpleBienestar) motivo = "No lograste alcanzar el Bienestar Social mínimo.";
+        if (!cumpleAbuso) motivo = "El Abuso Empresarial superó los límites permitidos.";
+        
+        failLevel(motivo);
     }
 }
 
@@ -575,6 +628,12 @@ function failLevel(reason) {
 function nextLevel() {
     DOM.levelCompleteScreen.classList.remove('active');
     GameState.isPaused = false;
+    
+    // Limpiamos el rastro del nivel anterior
+    GameState.particles = [];
+    DOM.gameControls.innerHTML = '';
+    
+    // Iniciamos el siguiente
     startLevel(GameState.currentLevel + 1);
 }
 
