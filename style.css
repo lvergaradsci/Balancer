@@ -906,58 +906,56 @@ body {
         gap: 20px;
     }
 }
-/* ============ CORRECCIÓN DE ESCALADO MÓVIL ============ */
+/* ============ ADAPTACIÓN REAL PARA MÓVILES ============ */
 @media screen and (max-width: 768px) {
-    /* 1. Prevenir que cualquier elemento expanda el ancho de la página */
+    /* 1. Prevenir el desbordamiento horizontal global */
     html, body {
         overflow-x: hidden;
         width: 100%;
     }
 
-    /* 2. Ajustar los mensajes de nivel para que no se desborden */
-    .mission-card, .level-intro {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 10px;
-        text-align: center;
+    /* 2. Corregir la Pantalla de Login */
+    .login-container {
+        padding: 20px;
+        width: 90%; /* Evita que choque con los bordes */
+    }
+    .game-title {
+        font-size: 2rem; /* Original era 3rem, se cortaba en móviles */
+    }
+    .game-subtitle {
+        font-size: 1.2rem;
     }
 
-    /* 3. Apilar las válvulas verticalmente (Este es tu desbordamiento principal en la imagen) */
-    .game-controls {
-        display: flex;
-        flex-direction: column; /* Cambia de lado-a-lado a arriba-abajo */
-        align-items: center;
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0 15px;
-    }
-
-    .control-valve {
-        width: 100%; /* Toma todo el ancho disponible del celular */
-        max-width: 100%;
-        box-sizing: border-box; /* Asegura que el padding no sume ancho extra */
-        margin-bottom: 15px; /* Separación entre las válvulas apiladas */
-    }
-
-    /* 4. Ajustar los tanques para que quepan bien */
-    .tanks-container {
-        width: 100%;
-        box-sizing: border-box;
-        padding: 0 10px;
-        /* Si quieres mantenerlos uno al lado del otro, usa esto: */
-        display: flex;
-        justify-content: space-between;
+    /* 3. Reorganizar el Header del Juego (que está en flex-row) */
+    .game-header {
+        flex-direction: column;
+        padding: 15px 10px;
         gap: 10px;
     }
-
-    .welfare-tank, .abuse-tank {
-        width: 48%; /* Obliga a los tanques a dividirse el espacio sin salirse */
+    .header-left, .header-center, .header-right {
+        width: 100%;
+        display: flex;
+        justify-content: center; /* Centrar elementos en lugar de space-between */
+        flex-wrap: wrap;
     }
 
-    /* 5. Ajustar el Header superior */
-    .game-header {
-        flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea si no caben */
-        padding: 10px;
+    /* 4. Solucionar el problema de las Válvulas (El de tu imagen) */
+    #gameControls {
+        display: flex;
+        flex-direction: column; /* Apila las válvulas verticalmente */
+        width: 100%;
+        padding: 0 20px;
+        box-sizing: border-box; /* Evita que el padding sume ancho */
+    }
+    .control-valve {
+        width: 100%;
+        margin-bottom: 15px;
         box-sizing: border-box;
+    }
+
+    /* 5. Ajustar el tamaño de las tarjetas de misión / modales */
+    .mission-card, .complete-card, .pause-card, .leaderboard-card {
+        width: 95%;
+        padding: 15px;
     }
 }
