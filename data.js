@@ -66,7 +66,7 @@ const GAME_DATA = {
             id: 3,
             title: "PRODUCTOS DAÑINOS: El Filtro Nacional",
             description: "Productos peligrosos ingresan al mercado. Activa el filtro de seguridad.",
-            minigameType: "filter",
+            minigameType: "filter", // IMPLEMENTADO v2
             difficulty: 2,
             duration: 65,
             targetWelfare: 80,
@@ -90,7 +90,7 @@ const GAME_DATA = {
             id: 4,
             title: "DESIGUALDAD ECONÓMICA: El Redistribuidor",
             description: "La riqueza se concentra en pocas manos. Redistribuye recursos equitativamente.",
-            minigameType: "hydraulic",
+            minigameType: "redistribution",
             difficulty: 3,
             duration: 75,
             targetWelfare: 85,
