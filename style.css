@@ -906,86 +906,86 @@ body {
         gap: 20px;
     }
 }
-/* ============ REPARACIÓN ESTRUCTURAL: MODO CELULAR ============ */
-@media (max-width: 600px) {
-    /* 1. El Header: Lo hacemos ultra delgado */
+/* ============ ADAPTACIÓN PARA MÓVILES (SCALING) ============ */
+@media screen and (max-width: 768px) {
+    /* 1. Ajuste de la pantalla de inicio */
+    .game-title {
+        font-size: 2rem; /* Título más pequeño para evitar desbordes */
+    }
+    .game-subtitle {
+        font-size: 1.2rem;
+    }
+    .login-container {
+        padding: 20px;
+        width: 90%;
+    }
+
+    /* 2. Reorganización del Header del Juego */
     .game-header {
-        height: 50px !important;
-        padding: 0 10px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 5px !important;
+        flex-direction: column; /* Apila el header verticalmente */
+        gap: 15px;
+        padding: 15px;
+    }
+    .header-left, .header-center, .header-right {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .indicator-panel {
+        width: 100%;
+        justify-content: space-around;
     }
 
-    /* Escondemos los textos de "Ingeniero:", "PUNTOS", "COMBO" */
-    .engineer-name, .score-label, .combo-label, .indicator-label {
-        display: none !important;
-    }
-
-    /* Hacemos los valores más pequeños y compactos */
-    #engineerDisplay, #scoreValue, #comboMultiplier, #currentLevel {
-        font-size: 0.8rem !important;
-        margin: 0 !important;
-    }
-
-    /* Ocultamos la barra visual del combo, dejamos solo el multiplicador */
-    .combo-bar {
-        display: none !important;
-    }
-
-    /* Ocultamos la sección de Presión y Justicia en móvil (ocupa el 40% de la pantalla) */
-    .header-right {
-        display: none !important;
-    }
-
-    /* 2. Los Tanques: Los hacemos más flacos para que no tapen el centro */
+    /* 3. Ajuste de los Tanques de Bienestar y Abuso */
     .tanks-container {
-        top: 60px !important;
-        padding: 0 10px !important;
+        flex-direction: column; /* Apilar los tanques si hay poco espacio horizontal */
+        align-items: center;
+        gap: 20px;
+    }
+    .welfare-tank, .abuse-tank {
+        width: 80%; /* Tanques más anchos pero apilados */
+        height: 150px; /* Reducir altura en móviles */
     }
 
-    .tank {
-        width: 70px !important; /* Más angostos */
+    /* 4. Controles (Válvulas) */
+    .game-controls {
+        display: flex;
+        flex-direction: column; /* Apilar controles */
+        width: 100%;
+        padding: 10px;
+    }
+    .control-valve {
+        width: 100%; 
+        padding: 15px;
+        margin-bottom: 10px;
     }
 
-    .tank-label {
-        font-size: 0.5rem !important;
-        line-height: 1 !important;
-        margin-bottom: 2px !important;
+    /* 5. Ajustes de modales (Pausa, Leaderboard, Level Complete) */
+    .complete-card, .pause-card, .leaderboard-card {
+        width: 95%;
+        padding: 20px;
+        max-height: 90vh; /* Evita que el modal sea más alto que la pantalla */
+        overflow-y: auto;
     }
-
-    .tank-body {
-        height: 120px !important; /* Más bajos */
+    
+    .button-group {
+        flex-direction: column;
+        gap: 10px;
     }
-
-    .tank-value {
-        font-size: 0.7rem !important;
+    
+    .button-group button {
+        width: 100%;
     }
+}
 
-    /* 3. El Canvas y Mensajes */
-    #gameCanvas {
-        height: calc(100vh - 120px) !important;
+/* Para pantallas aún más pequeñas (teléfonos en vertical) */
+@media screen and (max-width: 480px) {
+    .game-title {
+        font-size: 1.6rem;
     }
-
-    #levelMessage {
-        font-size: 1.1rem !important;
-        width: 80% !important;
-    }
-
-    /* 4. Footer y Pausa */
-    .game-footer {
-        height: 45px !important;
-        padding: 0 10px !important;
-    }
-
-    #instructions {
-        font-size: 0.65rem !important;
-        max-width: 70%;
-    }
-
-    #pauseButton {
-        padding: 5px 10px !important;
-        font-size: 0.7rem !important;
+    .start-btn {
+        font-size: 1.2rem;
+        padding: 15px;
     }
 }
