@@ -906,3 +906,43 @@ body {
         gap: 20px;
     }
 }
+/* ============ MODO MÓVIL: PANEL SUPERIOR ============ */
+@media (max-width: 600px) {
+    /* Hacemos el panel más delgado y transparente */
+    .top-panel {
+        padding: 5px 10px !important;
+        height: auto !important;
+        flex-wrap: wrap; /* Permite que se acomoden en dos mini-filas si es necesario */
+        gap: 5px;
+    }
+
+    /* Reducimos el tamaño de las fuentes */
+    .engineer-info h3, .level-info h3, .score-info h3 {
+        font-size: 0.7rem !important; /* Texto pequeño como "INGENIERO" */
+        margin-bottom: 0;
+    }
+
+    .engineer-name, .level-number, .score-value {
+        font-size: 1rem !important; /* El valor principal */
+    }
+
+    /* Ocultamos iconos o decoraciones que ocupen mucho espacio */
+    .factory-icon {
+        display: none;
+    }
+
+    /* Ajustamos el combo para que no flote en medio */
+    .combo-meter {
+        scale: 0.8;
+        transform-origin: top right;
+    }
+
+    /* Los tanques laterales (Bienestar/Abuso) suelen ser muy anchos en móvil */
+    .indicators-container {
+        width: 50px !important; /* Los hacemos más flacos */
+    }
+    
+    .fluid-label {
+        font-size: 0.6rem !important;
+    }
+}
