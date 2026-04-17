@@ -959,3 +959,548 @@ body {
         padding: 15px;
     }
 }
+
+/* ============ TIMER DISPLAY ============ */
+.timer-display {
+    font-family: 'Bungee', cursive;
+    font-size: 1.3rem;
+    color: var(--primary-blue);
+    padding: 8px 20px;
+    background: rgba(78, 205, 196, 0.1);
+    border: 2px solid var(--primary-blue);
+    border-radius: 20px;
+    min-width: 90px;
+    text-align: center;
+}
+
+/* ============ HYDRAULIC CONTROLS ============ */
+.hydraulic-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    padding: 10px;
+}
+.valve-label {
+    display: block;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+    color: var(--primary-blue);
+    letter-spacing: 0.5px;
+}
+.valve-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.valve-row input[type=range] {
+    flex: 1;
+    min-width: 120px;
+    accent-color: var(--primary-blue);
+    cursor: pointer;
+}
+.valve-value {
+    font-family: 'Bungee', cursive;
+    font-size: 1rem;
+    color: var(--primary-yellow);
+    min-width: 42px;
+    text-align: right;
+}
+
+/* ============ CONVEYOR BELT ============ */
+.conveyor-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+.conveyor-stats {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.cstat {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+.cstat strong { color: var(--primary-yellow); }
+.conveyor-belt-area {
+    position: relative;
+    background: rgba(0,0,0,0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    height: 130px;
+    border: 2px solid rgba(78,205,196,0.3);
+}
+.belt-track {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 20px;
+    background: repeating-linear-gradient(90deg, #222 0px, #222 20px, #333 20px, #333 40px);
+    overflow: hidden;
+}
+.belt-moving {
+    position: absolute;
+    top: 0; left: -100%;
+    width: 200%;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, transparent 0px, transparent 20px, rgba(255,255,255,0.1) 20px, rgba(255,255,255,0.1) 22px);
+    animation: beltScroll 1.5s linear infinite;
+}
+@keyframes beltScroll { to { transform: translateX(40px); } }
+.products-lane {
+    position: absolute;
+    top: 8px; left: 10px; right: 10px;
+    bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+}
+.products-lane::-webkit-scrollbar { display: none; }
+.conveyor-product {
+    flex-shrink: 0;
+    width: 100px;
+    background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(15,15,30,0.95));
+    border: 2px solid var(--prod-color, #4ECDC4);
+    border-radius: 12px;
+    padding: 8px;
+    text-align: center;
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--prod-color,#4ECDC4) 40%, transparent);
+    animation: slideIn 0.4s ease;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.conveyor-product:hover { transform: translateY(-3px) scale(1.04); }
+.conveyor-product.dragging { opacity: 0.5; cursor: grabbing; transform: scale(1.1); }
+.conveyor-product.touch-dragging { opacity: 0.7; }
+.conveyor-product.prod-correct { border-color: #06FFA5; background: rgba(6,255,165,0.2); animation: correctFlash 0.5s; }
+.conveyor-product.prod-wrong { border-color: #FF006E; background: rgba(255,0,110,0.2); animation: wrongFlash 0.5s; }
+.conveyor-product.prod-miss { opacity: 0; transform: translateY(30px); transition: all 0.4s; }
+@keyframes slideIn { from { opacity:0; transform:translateX(-30px); } }
+@keyframes correctFlash { 0%,100%{opacity:1} 50%{opacity:0.4} }
+@keyframes wrongFlash { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
+.prod-emoji { font-size: 1.8rem; }
+.prod-name { font-size: 0.65rem; font-weight: 700; margin-top: 3px; line-height: 1.2; color: var(--prod-color,white); }
+.prod-desc { font-size: 0.55rem; opacity: 0.7; margin-top: 2px; line-height: 1.2; }
+.destination-zones {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.dest-zone {
+    flex: 1;
+    min-width: 90px;
+    max-width: 180px;
+    padding: 14px 10px;
+    border-radius: 14px;
+    text-align: center;
+    border: 2px dashed rgba(255,255,255,0.3);
+    transition: all 0.2s;
+    cursor: pointer;
+    touch-action: none;
+}
+.dest-zone.zone-hover, .dest-zone:hover { transform: scale(1.05); border-style: solid; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+.subsidize-zone { background: rgba(6,255,165,0.08); border-color: #06FFA5; }
+.subsidize-zone.zone-hover { background: rgba(6,255,165,0.25); }
+.sanction-zone { background: rgba(255,0,110,0.08); border-color: #FF006E; }
+.sanction-zone.zone-hover { background: rgba(255,0,110,0.25); }
+.tax-zone { background: rgba(255,230,109,0.08); border-color: #FFE66D; }
+.tax-zone.zone-hover { background: rgba(255,230,109,0.25); }
+.zone-icon { font-size: 1.8rem; margin-bottom: 4px; }
+.zone-label { font-family: 'Bungee', cursive; font-size: 0.85rem; letter-spacing: 1px; }
+.zone-hint { font-size: 0.7rem; opacity: 0.7; margin-top: 3px; }
+
+/* ============ FILTER MINIGAME ============ */
+.filter-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+}
+.inspector-panel {
+    background: rgba(78,205,196,0.08);
+    border: 2px solid var(--primary-blue);
+    border-radius: 14px;
+    padding: 12px 16px;
+    text-align: center;
+}
+.inspector-title {
+    font-family: 'Bungee', cursive;
+    font-size: 1rem;
+    color: var(--primary-blue);
+    margin-bottom: 8px;
+}
+.filter-stats { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.fstat { font-size: 0.85rem; padding: 4px 10px; border-radius: 12px; background: rgba(255,255,255,0.07); }
+.fstat strong { color: var(--primary-yellow); }
+.filter-queue-area { display: flex; align-items: center; gap: 10px; }
+.filter-queue-label { font-size: 0.8rem; opacity: 0.7; white-space: nowrap; }
+.queue-items { display: flex; gap: 8px; flex-wrap: wrap; }
+.queue-item {
+    width: 38px; height: 38px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem;
+}
+.filter-current {
+    min-height: 120px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 14px;
+    border: 2px solid rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+}
+.filter-idle { opacity: 0.5; font-size: 1rem; }
+.filter-product-card {
+    padding: 16px 20px;
+    border-radius: 12px;
+    text-align: center;
+    width: 100%;
+}
+.safe-product { background: rgba(6,255,165,0.1); border: 2px solid #06FFA5; }
+.unsafe-product { background: rgba(255,0,110,0.1); border: 2px solid #FF006E; }
+.fcard-emoji { font-size: 2.5rem; margin-bottom: 8px; }
+.fcard-name { font-family: 'Bungee', cursive; font-size: 1.1rem; margin-bottom: 6px; }
+.fcard-hint { font-size: 0.85rem; opacity: 0.9; line-height: 1.4; }
+.filter-result { font-family: 'Bungee', cursive; font-size: 1.8rem; padding: 20px; }
+.result-ok { color: #06FFA5; }
+.result-fail { color: #FF006E; }
+.filter-timer-bar {
+    height: 8px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+.filter-timer-fill { height: 100%; width: 100%; background: #06FFA5; border-radius: 4px; transition: width 0.1s linear, background 0.3s; }
+.filter-buttons { display: flex; gap: 12px; }
+.filter-btn {
+    flex: 1;
+    padding: 14px 10px;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-family: 'Fredoka', sans-serif;
+    transition: all 0.2s;
+}
+.filter-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+.filter-btn:not(:disabled):hover { transform: scale(1.04) translateY(-2px); }
+.approve-btn { background: linear-gradient(135deg, #06FFA5, #4ECDC4); color: #0F0F1E; }
+.block-btn { background: linear-gradient(135deg, #FF006E, #FF6B35); color: white; }
+.fbtn-icon { font-size: 1.8rem; }
+.fbtn-label { font-family: 'Bungee', cursive; font-size: 0.9rem; letter-spacing: 1px; }
+.fbtn-hint { font-size: 0.7rem; opacity: 0.8; }
+
+/* ============ REDISTRIBUTION MINIGAME ============ */
+.redistribution-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    max-width: 680px;
+    margin: 0 auto;
+}
+.gini-display {
+    background: rgba(0,0,0,0.3);
+    border: 2px solid rgba(255,255,255,0.15);
+    border-radius: 14px;
+    padding: 14px 18px;
+}
+.gini-header { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; flex-wrap: wrap; }
+.gini-title { font-size: 0.85rem; opacity: 0.8; flex-shrink: 0; }
+.gini-big { font-family: 'Bungee', cursive; font-size: 2.2rem; color: var(--primary-yellow); }
+.gini-status { font-size: 0.9rem; font-weight: 700; }
+.gini-bar-wrap { margin-bottom: 10px; }
+.gini-bar-bg { height: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; overflow: hidden; margin-bottom: 4px; }
+.gini-bar-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease, background 0.3s; }
+.gini-target-line { font-size: 0.75rem; opacity: 0.6; text-align: center; }
+.wealth-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    height: 80px;
+    padding: 4px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+}
+.wealth-bar-col { flex: 1; height: 100%; display: flex; align-items: flex-end; }
+.wealth-bar-fill {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    min-height: 4px;
+    transition: height 0.6s ease;
+    display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 2px;
+}
+.wealth-bar-pct { font-size: 0.55rem; font-weight: 700; color: rgba(0,0,0,0.7); line-height: 1; }
+.quintile-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.65rem;
+    opacity: 0.6;
+    margin-top: 4px;
+}
+.redistrib-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.redistrib-controls .control-valve { flex: 1; min-width: 200px; }
+.policy-effect-hint {
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--primary-blue);
+    padding: 8px;
+    background: rgba(78,205,196,0.08);
+    border-radius: 8px;
+    min-height: 36px;
+}
+
+/* ============ CIRCUIT MINIGAME ============ */
+.circuit-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    width: 100%;
+    max-width: 640px;
+    margin: 0 auto;
+}
+.circuit-title {
+    font-family: 'Bungee', cursive;
+    font-size: 1.1rem;
+    color: var(--primary-yellow);
+    text-align: center;
+}
+.circuit-grid {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.circuit-node {
+    background: rgba(26,26,46,0.95);
+    border: 2px solid var(--primary-blue);
+    border-radius: 14px;
+    padding: 14px;
+    text-align: center;
+    flex: 1;
+    min-width: 150px;
+    max-width: 200px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+.circuit-node.node-connected {
+    border-color: #06FFA5;
+    box-shadow: 0 0 20px rgba(6,255,165,0.5);
+}
+.circuit-from, .circuit-to {
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.08);
+    margin-bottom: 8px;
+}
+.circuit-wire {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0;
+    justify-content: center;
+}
+.wire-line {
+    flex: 1;
+    height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    transition: all 0.4s;
+}
+.wire-dot { font-size: 1rem; transition: color 0.4s; }
+.circuit-btn {
+    width: 100%;
+    padding: 10px;
+    font-family: 'Fredoka', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    background: rgba(78,205,196,0.15);
+    border: 2px solid var(--primary-blue);
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 8px 0 4px;
+}
+.circuit-btn:not(:disabled):hover { background: rgba(78,205,196,0.4); transform: scale(1.03); }
+.circuit-btn:disabled { cursor: not-allowed; }
+.resist-label { font-size: 0.7rem; opacity: 0.7; }
+.circuit-progress { text-align: center; }
+.circ-prog-bar { height: 10px; background: rgba(255,255,255,0.1); border-radius: 5px; overflow: hidden; margin-bottom: 6px; }
+.circ-prog-fill { height: 100%; background: linear-gradient(90deg, #06FFA5, #4ECDC4); border-radius: 5px; transition: width 0.4s; }
+#circProgText { font-size: 0.85rem; opacity: 0.8; }
+
+/* ============ GAME CONTROLS POSITIONING FIX ============ */
+.game-controls {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+    width: calc(100% - 40px);
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--primary-blue) transparent;
+}
+
+/* ============ FULL MOBILE REDESIGN ============ */
+@media screen and (max-width: 768px) {
+    html, body { overflow-x: hidden; width: 100%; height: 100%; }
+
+    /* Login */
+    .login-container { padding: 16px 14px; width: 95%; max-width: 100%; }
+    .game-title { font-size: 1.6rem; letter-spacing: 1px; }
+    .game-subtitle { font-size: 1rem; }
+    .factory-logo { width: 100px; height: 100px; margin-bottom: 16px; }
+    .gear-1 { width: 55px; height: 55px; left: 22px; }
+    .gear-2 { width: 42px; height: 42px; }
+    .gear-3 { width: 36px; height: 36px; }
+    .mission-card { padding: 12px; margin: 12px 0; }
+    .mission-text { font-size: 1rem; }
+    .mission-subtext { font-size: 0.85rem; }
+    .authors-badge { padding: 10px; }
+    .input-container { margin: 16px 0; }
+    #playerName { padding: 14px 18px; font-size: 1rem; }
+    .start-btn { padding: 16px; font-size: 1.2rem; }
+
+    /* Header */
+    .game-header {
+        flex-direction: column;
+        padding: 8px 12px;
+        gap: 6px;
+    }
+    .header-left { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    .header-center { width: 100%; }
+    .header-right { width: 100%; }
+    .engineer-name { font-size: 0.9rem; }
+    .level-badge { padding: 4px 10px; font-size: 0.8rem; }
+    .score-value { font-size: 1.8rem; }
+    .combo-bar { width: 100px; }
+    .indicator-bar { width: 100px; }
+    .indicator-panel { flex-direction: row; gap: 14px; justify-content: center; }
+    .indicator-label { font-size: 0.7rem; }
+
+    /* Game container */
+    .game-container { padding: 8px; }
+    .tanks-container {
+        flex-direction: row;
+        gap: 20px;
+        top: auto;
+        bottom: 130px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    .tank-body { width: 80px; height: 160px; }
+    .tank-label { font-size: 0.65rem; margin-bottom: 6px; }
+    .tank-value { font-size: 1rem; }
+    .tank-markers { right: -30px; font-size: 0.65rem; }
+
+    /* Controls */
+    .game-controls {
+        bottom: 60px;
+        left: 0;
+        right: 0;
+        transform: none;
+        width: 100%;
+        max-height: calc(100vh - 320px);
+        padding: 0 8px;
+    }
+
+    /* Hydraulic */
+    .hydraulic-controls { flex-direction: column; gap: 8px; padding: 8px; }
+    .control-valve { padding: 12px; }
+    .valve-label { font-size: 0.8rem; }
+    .valve-row input[type=range] { min-width: 80px; }
+
+    /* Conveyor */
+    .conveyor-container { gap: 8px; }
+    .conveyor-belt-area { height: 110px; }
+    .conveyor-product { width: 82px; }
+    .prod-emoji { font-size: 1.4rem; }
+    .prod-name { font-size: 0.6rem; }
+    .prod-desc { display: none; }
+    .dest-zone { min-width: 70px; padding: 10px 6px; }
+    .zone-label { font-size: 0.7rem; }
+    .zone-hint { font-size: 0.6rem; }
+
+    /* Filter */
+    .filter-container { gap: 8px; }
+    .fcard-emoji { font-size: 2rem; }
+    .fcard-name { font-size: 0.95rem; }
+    .filter-btn { padding: 10px 6px; }
+    .fbtn-icon { font-size: 1.4rem; }
+    .fbtn-label { font-size: 0.75rem; }
+    .fbtn-hint { display: none; }
+
+    /* Redistribution */
+    .redistribution-container { gap: 8px; }
+    .wealth-bars { height: 60px; }
+    .redistrib-controls .control-valve { min-width: 140px; }
+    .gini-big { font-size: 1.8rem; }
+
+    /* Circuit */
+    .circuit-grid { gap: 8px; }
+    .circuit-node { min-width: 120px; padding: 10px; }
+    .circuit-btn { font-size: 0.8rem; padding: 8px; }
+
+    /* Footer */
+    .game-footer { padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+    .instructions { font-size: 0.8rem; flex: 1; min-width: 0; }
+    .icon-btn { padding: 8px 14px; font-size: 0.85rem; }
+    .timer-display { font-size: 1rem; padding: 6px 12px; }
+
+    /* Overlay cards */
+    .complete-card, .gameover-card, .leaderboard-card, .pause-card {
+        padding: 22px 16px;
+        width: 95%;
+        max-width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .complete-title, .gameover-title, .leaderboard-title { font-size: 1.6rem; }
+    .complete-stats { flex-direction: column; gap: 10px; }
+    .stat-value { font-size: 1.5rem; }
+    .stars-container span { font-size: 2rem !important; }
+    .next-btn, .retry-btn, .resume-btn, .leaderboard-btn, .quit-btn, .back-btn { padding: 14px; font-size: 0.95rem; }
+    .button-group { flex-direction: column; }
+    .leaderboard-list { max-height: 300px; }
+}
+
+@media screen and (max-width: 480px) {
+    .game-title { font-size: 1.3rem; }
+    .tanks-container { gap: 12px; bottom: 120px; }
+    .tank-body { width: 65px; height: 130px; }
+    .dest-zone { min-width: 60px; }
+    .destination-zones { gap: 6px; }
+    .conveyor-product { width: 72px; }
+    .circuit-node { min-width: 100px; }
+    .redistrib-controls .control-valve { min-width: 100%; }
+}
