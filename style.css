@@ -906,63 +906,70 @@ body {
         gap: 20px;
     }
 }
-/* ============ REPARACIÓN TOTAL DE INTERFAZ MÓVIL ============ */
+/* ============ REPARACIÓN ESTRUCTURAL MÓVIL ============ */
 @media (max-width: 600px) {
-    /* 1. Aplastar el Panel Superior al mínimo */
+    /* 1. Forzamos el panel a ser una barra fija y plana */
     .top-panel {
-        height: 45px !important; /* Altura mínima */
-        padding: 0 5px !important;
-        background: rgba(10, 15, 28, 0.95) !important; /* Más sólido para que no distraiga */
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 40px !important; /* Altura mínima absoluta */
+        padding: 0 10px !important;
+        margin: 0 !important;
         display: flex !important;
-        align-items: center !important;
+        flex-direction: row !important; /* Todo en una línea */
         justify-content: space-between !important;
+        align-items: center !important;
+        background: rgba(0, 0, 0, 0.9) !important;
+        border-bottom: 1px solid #4ECDC4 !important;
+        z-index: 1000 !important;
     }
 
-    /* Quitamos los cuadros/bordes de cada estadística para ganar espacio */
+    /* 2. MATAMOS LAS CAJAS: Quitamos fondos, bordes y paddings de los contenedores internos */
     .engineer-info, .level-info, .score-info {
-        background: none !important;
+        background: transparent !important;
         border: none !important;
+        box-shadow: none !important;
         padding: 0 !important;
         margin: 0 !important;
-        box-shadow: none !important;
+        width: auto !important;
+        flex: 1 !important;
         display: flex !important;
-        flex-direction: row !important; /* Nombre y valor en la misma línea */
-        gap: 5px;
+        justify-content: center !important;
     }
 
-    /* Escondemos los títulos largos y dejamos solo los valores */
-    .top-panel h3 {
+    /* 3. SOLO NÚMEROS: Escondemos las etiquetas "Ingeniero:", "Nivel:", "Puntos:" */
+    .top-panel h3, 
+    .top-panel label, 
+    .top-panel span:first-child:not(.score-value):not(.level-number) {
         display: none !important;
     }
 
+    /* 4. TAMAÑO DE TEXTO: Hacemos los valores legibles pero compactos */
     .engineer-name, .level-number, .score-value {
         font-size: 0.8rem !important;
-        font-family: sans-serif !important; /* Fuente más limpia para móvil */
+        color: #06FFA5 !important;
+        white-space: nowrap !important;
     }
 
-    /* 2. Reducir los tanques laterales (Bienestar/Abuso) */
+    /* 5. TANQUES: Los volvemos hilos delgados a los lados */
     .indicators-container {
-        width: 30px !important; /* Súper delgados */
-        height: 40% !important; /* Más bajos para que no toquen el panel superior */
-        top: 60px !important; /* Los bajamos un poco para que no choquen arriba */
+        width: 25px !important; /* Casi invisibles de ancho */
+        height: 150px !important; /* Altura corta */
+        top: 50px !important; /* Debajo de la barra superior */
     }
 
-    .fluid-label {
-        font-size: 7px !important;
-        bottom: -15px !important;
-    }
-
-    /* 3. El Mensaje de Nivel (el texto gigante que sale al inicio) */
+    /* 6. EL MENSAJE CENTRAL: Ese texto que dice "NIVEL 1" suele ser el que más tapa */
     #levelMessage {
-        font-size: 1.2rem !important;
-        width: 80% !important;
-        top: 30% !important;
+        font-size: 1rem !important;
+        top: 20% !important;
+        background: none !important;
     }
 
-    /* 4. Las instrucciones de abajo */
-    #instructions {
-        font-size: 0.7rem !important;
-        padding: 5px !important;
-        bottom: 10px !important;
+    /* 7. EL CANVAS: Aseguramos que empiece debajo de la barra */
+    #gameCanvas {
+        margin-top: 40px !important;
     }
 }
+  
