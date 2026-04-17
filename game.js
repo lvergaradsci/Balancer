@@ -216,6 +216,9 @@ function initMinigame(level) {
         case 'conveyor':
             initConveyorMinigame(level);
             break;
+        case 'filter':
+            initFilterMinigame(level);
+            break;
         case 'circuit':
             initCircuitMinigame(level);
             break;
@@ -226,7 +229,6 @@ function initMinigame(level) {
     startGameLoop();
     startLevelTimer(level);
 }
-
 // HIDRÁULICA
 function initHydraulicMinigame(level) {
     DOM.instructions.textContent = 'Ajusta las válvulas para llenar BIENESTAR sin desbordar ABUSO';
@@ -299,29 +301,194 @@ function applyValveEffect(valveType, value, level) {
 }
 
 // CONVEYOR
+// ==========================================
+// NIVEL 2: CONVEYOR (Publicidad Engañosa)
+// ==========================================
 function initConveyorMinigame(level) {
-    DOM.instructions.textContent = 'Haz clic en las políticas CORRECTAS para subir el BIENESTAR';
+    DOM.instructions.textContent = level.messages.intro;
     GameState.currentMinigame = 'conveyor';
-
-    const politicas = [
-        { desc: "Subsidio de Vivienda", tipo: 'bien' },
-        { desc: "Evasión de Impuestos", tipo: 'mal' },
-        { desc: "Salario Mínimo Justo", tipo: 'bien' },
-        { desc: "Explotación Infantil", tipo: 'mal' },
-        { desc: "Seguridad Social", tipo: 'bien' }
-    ];
-
-    let html = `<div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; padding:20px;">`;
-    politicas.forEach(p => {
-        html += `
-            <button class="policy-btn" onclick="procesarPolitica('${p.tipo}', this)" 
-                style="padding:15px; background:rgba(255,255,255,0.1); border:2px solid #4ECDC4; color:white; border-radius:10px; cursor:pointer;">
-                ${p.desc}
-            </button>`;
-    });
-    html += `</div>`;
+    
+    // Interfaz de Clasificación
+    const html = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%;">
+            <div id="conveyorProduct" style="width:100px; height:100px; background:rgba(255,255,255,0.05); border:3px solid #fff; border-radius:15px; display:flex; justify-content:center; align-items:center; font-size:3.5rem; transition:all 0.3s; margin-top:10px;">
+                ⚙️
+            </div>
+            <div id="productLabel" style="font-size:1.2rem; font-weight:bold; height:25px;">Preparando cinta...</div>
+            
+            <div style="display:flex; gap:10px; width:100%; justify-content:center; flex-wrap:wrap; margin-top:10px;">
+                <button onclick="sortProduct('good')" class="control-valve" style="flex:1; min-width:100px; background:rgba(6,255,165,0.1); border-color:#06FFA5; color:white; cursor:pointer;">✅ Aprobar</button>
+                <button onclick="sortProduct('neutral')" class="control-valve" style="flex:1; min-width:100px; background:rgba(255,230,109,0.1); border-color:#FFE66D; color:white; cursor:pointer;">⚖️ Impuesto</button>
+                <button onclick="sortProduct('bad')" class="control-valve" style="flex:1; min-width:100px; background:rgba(255,107,53,0.1); border-color:#FF6B35; color:white; cursor:pointer;">🚫 Sancionar</button>
+            </div>
+        </div>
+    `;
     DOM.gameControls.innerHTML = html;
+    
+    window.currentProductType = null;
+    setTimeout(spawnNextProduct, 1000);
 }
+
+window.spawnNextProduct = function() {
+    if(GameState.isGameOver || GameState.isPaused || GameState.currentMinigame !== 'conveyor') return;
+    
+    const types = [
+        { type: "good", label: "Producto Básico", icon: "🍞", color: "#06FFA5" },
+        { type: "bad", label: "Publicidad Falsa", icon: "🤥", color: "#FF6B35" },
+        { type: "neutral", label: "Producto Lujo", icon: "💎", color: "#FFE66D" }
+    ];
+    const prod = types[Math.floor(Math.random() * types.length)];
+    window.currentProductType = prod.type;
+    
+    const prodDiv = document.getElementById('conveyorProduct');
+    const labelDiv = document.getElementById('productLabel');
+    if(prodDiv && labelDiv) {
+        prodDiv.textContent = prod.icon;
+        prodDiv.style.borderColor = prod.color;
+        prodDiv.style.boxShadow = `0 0 20px ${prod.color}`;
+        labelDiv.textContent = prod.label;
+    }
+};
+
+window.sortProduct = function(selectedType) {
+    if (!window.currentProductType || GameState.isPaused) return;
+    
+    if (selectedType === window.currentProductType) {
+        // Acierto
+        if(window.soundManager && window.soundManager.playDrop) soundManager.playDrop();
+        GameState.welfare = Math.min(100, GameState.welfare + 6);
+        GameState.justice = Math.min(100, GameState.justice + 2);
+        addScore(60);
+        addCombo();
+    } else {
+        // Error
+        GameState.abuse = Math.min(100, GameState.abuse + 10);
+        GameState.welfare = Math.max(0, GameState.welfare - 5);
+        resetCombo();
+    }
+    updateIndicators();
+    
+    window.currentProductType = null;
+    const prodDiv = document.getElementById('conveyorProduct');
+    if(prodDiv) {
+        prodDiv.textContent = "⚙️";
+        prodDiv.style.borderColor = "#fff";
+        prodDiv.style.boxShadow = "none";
+        document.getElementById('productLabel').textContent = "Procesando...";
+    }
+    setTimeout(spawnNextProduct, 600);
+};
+
+// ==========================================
+// NIVEL 3: FILTER (Productos Dañinos)
+// ==========================================
+function initFilterMinigame(level) {
+    DOM.instructions.textContent = level.messages.intro;
+    GameState.currentMinigame = 'filter';
+    
+    const html = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:20px; width:100%; padding:10px;">
+            <div style="font-size:1.1rem; text-align:center;">
+                Filtro de Seguridad: <strong id="filterStatus" style="color:#FF6B35;">INACTIVO</strong>
+            </div>
+            
+            <div id="filterScanner" style="width:90%; height:100px; border:3px dashed #4ECDC4; border-radius:15px; display:flex; align-items:center; overflow:hidden; position:relative; background:rgba(255,255,255,0.02);">
+                <div style="position:absolute; width:4px; height:100%; background:rgba(255,255,255,0.2); left:50%; z-index:0;"></div>
+                <div id="movingProduct" style="position:absolute; left:-50px; font-size:2.5rem; transition: left 1.5s linear; z-index:1;">📦</div>
+            </div>
+            
+            <button id="activateFilterBtn" 
+                onmousedown="toggleFilter(true)" onmouseup="toggleFilter(false)" onmouseleave="toggleFilter(false)" 
+                ontouchstart="toggleFilter(true)" ontouchend="toggleFilter(false)" 
+                class="control-valve" style="width:90%; border-color:#FF6B35; color:white; font-size:1.1rem; cursor:pointer; user-select:none;">
+                🔴 MANTÉN PRESIONADO PARA FILTRAR
+            </button>
+        </div>
+    `;
+    DOM.gameControls.innerHTML = html;
+    
+    window.isFilterActive = false;
+    setTimeout(startFilterScanner, 1000);
+}
+
+window.toggleFilter = function(active) {
+    if(GameState.isPaused) return;
+    window.isFilterActive = active;
+    const btn = document.getElementById('activateFilterBtn');
+    const status = document.getElementById('filterStatus');
+    const scanner = document.getElementById('filterScanner');
+    
+    if(active) {
+        if(window.soundManager && window.soundManager.playElectric) soundManager.playElectric();
+        btn.style.borderColor = '#06FFA5';
+        btn.innerHTML = '🟢 FILTRANDO...';
+        status.textContent = 'ACTIVO (Gastando Justicia)';
+        status.style.color = '#06FFA5';
+        scanner.style.borderColor = '#06FFA5';
+        scanner.style.background = 'rgba(6,255,165,0.1)';
+    } else {
+        btn.style.borderColor = '#FF6B35';
+        btn.innerHTML = '🔴 MANTÉN PRESIONADO PARA FILTRAR';
+        status.textContent = 'INACTIVO';
+        status.style.color = '#FF6B35';
+        scanner.style.borderColor = '#4ECDC4';
+        scanner.style.background = 'rgba(255,255,255,0.02)';
+    }
+};
+
+window.startFilterScanner = function() {
+    if(GameState.isGameOver || GameState.isPaused || GameState.currentMinigame !== 'filter') return;
+    
+    const prodDiv = document.getElementById('movingProduct');
+    if(!prodDiv) return;
+
+    // 40% de probabilidad de ser tóxico
+    const isToxic = Math.random() < 0.4; 
+    prodDiv.textContent = isToxic ? '☠️' : '🍏';
+    
+    // Reiniciar posición a la izquierda
+    prodDiv.style.transition = 'none';
+    prodDiv.style.left = '-60px';
+    
+    // Iniciar movimiento hacia la derecha
+    setTimeout(() => {
+        prodDiv.style.transition = 'left 1.5s linear';
+        prodDiv.style.left = '120%';
+        
+        // Evaluar justo cuando pasa por el medio (0.75s)
+        setTimeout(() => {
+            if (GameState.isGameOver || GameState.isPaused) return;
+            
+            if (window.isFilterActive) {
+                GameState.justice = Math.max(0, GameState.justice - 1); // Costo de usar el filtro
+                if (isToxic) {
+                    GameState.welfare = Math.min(100, GameState.welfare + 5);
+                    addScore(50);
+                    addCombo();
+                    prodDiv.textContent = '🛡️'; // Visual de bloqueo
+                } else {
+                    // Penalización por bloquear algo sano
+                    GameState.abuse = Math.min(100, GameState.abuse + 5);
+                    resetCombo();
+                }
+            } else {
+                if (isToxic) {
+                    // Dejó pasar algo tóxico
+                    GameState.abuse = Math.min(100, GameState.abuse + 15);
+                    GameState.welfare = Math.max(0, GameState.welfare - 8);
+                    resetCombo();
+                } else {
+                    // Dejó pasar algo sano
+                    GameState.welfare = Math.min(100, GameState.welfare + 3);
+                }
+            }
+            updateIndicators();
+            
+            // Repetir el ciclo
+            setTimeout(startFilterScanner, 800);
+        }, 750);
+    }, 50);
+};
 
 window.procesarPolitica = function(tipo, btn) {
     if (tipo === 'bien') {
@@ -337,14 +504,6 @@ window.procesarPolitica = function(tipo, btn) {
     updateIndicators();
 };
 
-window.simulateConveyorSuccess = function() {
-    addScore(500);
-    GameState.welfare = 80;
-    GameState.justice = 75;
-    updateIndicators();
-    soundManager.playSuccess();
-    setTimeout(() => completeLevel(), 1000);
-}
 
 // CIRCUIT
 function initCircuitMinigame(level) {
