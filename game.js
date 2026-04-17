@@ -386,9 +386,6 @@ function updatePhysics() {
         }
         
         if (p.y > canvasHeight - 100) {
-            p.y = canvasHeight - 100;
-            p.vy *= -0.5;
-            
             // Agregar al tanque correspondiente
             if (Math.random() < 0.1) {
                 if (p.type === 'welfare') {
@@ -398,12 +395,11 @@ function updatePhysics() {
                 }
                 updateIndicators();
             }
-        }
-        
-        // Reciclar partículas
-        if (p.y > canvasHeight + 100) {
-            p.y = -50;
-            p.x = Math.random() * canvasWidth;
+            
+            // SOLUCIÓN: Reciclar la partícula inmediatamente al tocar el fondo
+            p.y = -50; // La enviamos arriba
+            p.x = Math.random() * canvasWidth; // A una posición horizontal aleatoria
+            p.vy = 2; // Restauramos su velocidad de caída
         }
     });
 }
