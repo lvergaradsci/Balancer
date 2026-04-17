@@ -906,46 +906,63 @@ body {
         gap: 20px;
     }
 }
-/* ============ PARCHE DE EMERGENCIA PARA MÓVILES ============ */
+/* ============ REPARACIÓN TOTAL DE INTERFAZ MÓVIL ============ */
 @media (max-width: 600px) {
-    /* 1. Aplastar el panel superior */
+    /* 1. Aplastar el Panel Superior al mínimo */
     .top-panel {
-        height: 50px !important;
-        padding: 0 10px !important;
+        height: 45px !important; /* Altura mínima */
+        padding: 0 5px !important;
+        background: rgba(10, 15, 28, 0.95) !important; /* Más sólido para que no distraiga */
         display: flex !important;
-        flex-direction: row !important;
-        justify-content: space-around !important;
         align-items: center !important;
+        justify-content: space-between !important;
     }
 
-    /* Ocultamos los textos descriptivos, dejamos solo los números */
+    /* Quitamos los cuadros/bordes de cada estadística para ganar espacio */
+    .engineer-info, .level-info, .score-info {
+        background: none !important;
+        border: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        display: flex !important;
+        flex-direction: row !important; /* Nombre y valor en la misma línea */
+        gap: 5px;
+    }
+
+    /* Escondemos los títulos largos y dejamos solo los valores */
     .top-panel h3 {
         display: none !important;
     }
 
-    /* Reducimos el tamaño de los valores (Ingeniero, Nivel, Score) */
     .engineer-name, .level-number, .score-value {
         font-size: 0.8rem !important;
-        margin: 0 !important;
+        font-family: sans-serif !important; /* Fuente más limpia para móvil */
     }
 
-    /* 2. Adelgazar los contenedores laterales (Tanques) */
+    /* 2. Reducir los tanques laterales (Bienestar/Abuso) */
     .indicators-container {
-        width: 35px !important; /* Estrechos para dejar espacio al juego */
-        height: 50% !important; /* Más bajos */
-        bottom: 10% !important;
+        width: 30px !important; /* Súper delgados */
+        height: 40% !important; /* Más bajos para que no toquen el panel superior */
+        top: 60px !important; /* Los bajamos un poco para que no choquen arriba */
     }
 
-    /* Etiquetas de Bienestar/Abuso muy pequeñas */
     .fluid-label {
-        font-size: 8px !important;
-        width: 100% !important;
-        text-align: center !important;
+        font-size: 7px !important;
+        bottom: -15px !important;
     }
 
-    /* 3. Ajustar el Canvas para que no se oculte */
-    #gameCanvas {
-        height: calc(100vh - 100px) !important;
-        top: 50px !important;
+    /* 3. El Mensaje de Nivel (el texto gigante que sale al inicio) */
+    #levelMessage {
+        font-size: 1.2rem !important;
+        width: 80% !important;
+        top: 30% !important;
+    }
+
+    /* 4. Las instrucciones de abajo */
+    #instructions {
+        font-size: 0.7rem !important;
+        padding: 5px !important;
+        bottom: 10px !important;
     }
 }
