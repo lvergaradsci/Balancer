@@ -906,61 +906,79 @@ body {
         gap: 20px;
     }
 }
-/* ============ CORRECCIÓN FINAL DE TANQUES PARA MÓVIL ============ */
+/* ============ SOLUCIÓN FINAL: ESTRUCTURA RÍGIDA MÓVIL ============ */
 @media (max-width: 600px) {
-    /* 1. Forzar el contenedor de tanques a ser horizontal y ocupar todo el ancho */
-    .tanks-container {
-        display: flex !important;
-        flex-direction: row !important; /* Asegura que estén uno al lado del otro */
-        justify-content: space-between !important; /* Uno a la izquierda, otro a la derecha */
-        position: absolute !important;
-        top: 60px !important; /* Justo debajo del header */
-        left: 0 !important;
-        right: 0 !important;
-        width: 100% !important;
-        height: auto !important;
+    /* 1. Cabezal ultra-plano */
+    .game-header {
+        height: 45px !important;
         padding: 0 10px !important;
-        pointer-events: none !important; /* Para que no estorben los clics en el centro */
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        overflow: hidden !important;
     }
 
-    /* 2. Ajuste de cada Tanque */
-    .tank {
-        width: 65px !important; /* Más delgados */
-        height: auto !important;
-        pointer-events: auto !important; /* Que vuelvan a ser clicables si es necesario */
+    /* Ocultamos etiquetas innecesarias para ganar 60% de espacio */
+    .engineer-name, .score-label, .combo-label, .indicator-panel, .level-icon {
+        display: none !important;
+    }
+
+    /* Solo mostramos los valores clave */
+    #engineerDisplay, #currentLevel, #scoreValue {
+        font-size: 0.85rem !important;
         margin: 0 !important;
     }
 
-    /* 3. Limitar la altura del cuerpo del tanque (el vidrio) */
-    .tank-body {
-        height: 140px !important; /* Altura controlada para que no desaparezca arriba */
-        width: 100% !important;
-        border-width: 2px !important;
-    }
-
-    /* 4. Ajustar el fluido dentro del tanque */
-    .fluid {
-        width: 100% !important;
-    }
-
-    /* 5. Etiquetas de Bienestar y Abuso (los textos arriba de los tanques) */
-    .tank-label {
-        font-size: 0.5rem !important;
-        white-space: normal !important; /* Permite que el texto se parta en dos líneas */
-        height: 25px !important;
+    /* 2. CONTENEDOR DE TANQUES: Forzamos el "Espejo" */
+    .tanks-container {
         display: flex !important;
-        align-items: flex-end !important;
-        justify-content: center !important;
+        flex-direction: row !important; /* OBLIGATORIO: Lado a lado */
+        justify-content: space-between !important;
+        position: absolute !important;
+        top: 55px !important; /* Distancia exacta debajo del header */
+        left: 0 !important;
+        width: 100% !important;
+        height: 160px !important; /* Altura máxima para que no suban */
+        padding: 0 15px !important;
+        box-sizing: border-box !important;
+        z-index: 100 !important;
     }
 
-    /* 6. Los marcadores de 100%, 50% (si molestan, los hacemos minúsculos) */
-    .tank-markers span {
-        font-size: 0.5rem !important;
+    /* 3. Ajuste individual de cada Tanque */
+    .tank {
+        width: 75px !important; /* Ancho fijo para que no se deformen */
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
     }
 
-    /* 7. El valor numérico de abajo (0%) */
+    .tank-body {
+        height: 110px !important; /* Vidrio del tanque más pequeño */
+        width: 100% !important;
+        border: 2px solid rgba(255,255,255,0.2) !important;
+        position: relative !important;
+    }
+
+    /* 4. Texto de Bienestar/Abuso (muy pequeño) */
+    .tank-label {
+        font-size: 0.55rem !important;
+        height: 20px !important;
+        text-align: center !important;
+        margin-bottom: 2px !important;
+    }
+
     .tank-value {
         font-size: 0.7rem !important;
-        margin-top: 5px !important;
+        margin-top: 2px !important;
+    }
+
+    /* 5. El Canvas: Aseguramos que no empuje nada */
+    #gameCanvas {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        z-index: 1 !important;
     }
 }
