@@ -1,10 +1,10 @@
 // sheets.js - Conexión con Google Sheets (Leaderboard)
 
 // IMPORTANTE: Reemplaza esta URL con tu propio Google Apps Script Web App URL
-const GOOGLE_SCRIPT_URL = 'TU_GOOGLE_APPS_SCRIPT_URL_AQUI';
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxr2VC6mI9DbabxIu6jUmJiYmd12i2yJfI__hVuWaGVrVFMKKPzA-rPE5ASAx_v7i1z0A/exec';
 
 // Flag para desarrollo (usar localStorage si no hay API)
-const USE_LOCAL_STORAGE = true; // Cambiar a false cuando tengas la URL real
+const USE_LOCAL_STORAGE = false; // Cambiar a false cuando tengas la URL real
 
 class LeaderboardManager {
     constructor() {
