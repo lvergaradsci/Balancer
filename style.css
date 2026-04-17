@@ -906,70 +906,86 @@ body {
         gap: 20px;
     }
 }
-/* ============ REPARACIÓN ESTRUCTURAL MÓVIL ============ */
+/* ============ REPARACIÓN ESTRUCTURAL: MODO CELULAR ============ */
 @media (max-width: 600px) {
-    /* 1. Forzamos el panel a ser una barra fija y plana */
-    .top-panel {
-        position: fixed !important;
-        top: 0 !important;
-        left: 0 !important;
-        width: 100% !important;
-        height: 40px !important; /* Altura mínima absoluta */
+    /* 1. El Header: Lo hacemos ultra delgado */
+    .game-header {
+        height: 50px !important;
         padding: 0 10px !important;
-        margin: 0 !important;
         display: flex !important;
-        flex-direction: row !important; /* Todo en una línea */
-        justify-content: space-between !important;
         align-items: center !important;
-        background: rgba(0, 0, 0, 0.9) !important;
-        border-bottom: 1px solid #4ECDC4 !important;
-        z-index: 1000 !important;
+        justify-content: space-between !important;
+        gap: 5px !important;
     }
 
-    /* 2. MATAMOS LAS CAJAS: Quitamos fondos, bordes y paddings de los contenedores internos */
-    .engineer-info, .level-info, .score-info {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
-        padding: 0 !important;
-        margin: 0 !important;
-        width: auto !important;
-        flex: 1 !important;
-        display: flex !important;
-        justify-content: center !important;
-    }
-
-    /* 3. SOLO NÚMEROS: Escondemos las etiquetas "Ingeniero:", "Nivel:", "Puntos:" */
-    .top-panel h3, 
-    .top-panel label, 
-    .top-panel span:first-child:not(.score-value):not(.level-number) {
+    /* Escondemos los textos de "Ingeniero:", "PUNTOS", "COMBO" */
+    .engineer-name, .score-label, .combo-label, .indicator-label {
         display: none !important;
     }
 
-    /* 4. TAMAÑO DE TEXTO: Hacemos los valores legibles pero compactos */
-    .engineer-name, .level-number, .score-value {
+    /* Hacemos los valores más pequeños y compactos */
+    #engineerDisplay, #scoreValue, #comboMultiplier, #currentLevel {
         font-size: 0.8rem !important;
-        color: #06FFA5 !important;
-        white-space: nowrap !important;
+        margin: 0 !important;
     }
 
-    /* 5. TANQUES: Los volvemos hilos delgados a los lados */
-    .indicators-container {
-        width: 25px !important; /* Casi invisibles de ancho */
-        height: 150px !important; /* Altura corta */
-        top: 50px !important; /* Debajo de la barra superior */
+    /* Ocultamos la barra visual del combo, dejamos solo el multiplicador */
+    .combo-bar {
+        display: none !important;
     }
 
-    /* 6. EL MENSAJE CENTRAL: Ese texto que dice "NIVEL 1" suele ser el que más tapa */
-    #levelMessage {
-        font-size: 1rem !important;
-        top: 20% !important;
-        background: none !important;
+    /* Ocultamos la sección de Presión y Justicia en móvil (ocupa el 40% de la pantalla) */
+    .header-right {
+        display: none !important;
     }
 
-    /* 7. EL CANVAS: Aseguramos que empiece debajo de la barra */
+    /* 2. Los Tanques: Los hacemos más flacos para que no tapen el centro */
+    .tanks-container {
+        top: 60px !important;
+        padding: 0 10px !important;
+    }
+
+    .tank {
+        width: 70px !important; /* Más angostos */
+    }
+
+    .tank-label {
+        font-size: 0.5rem !important;
+        line-height: 1 !important;
+        margin-bottom: 2px !important;
+    }
+
+    .tank-body {
+        height: 120px !important; /* Más bajos */
+    }
+
+    .tank-value {
+        font-size: 0.7rem !important;
+    }
+
+    /* 3. El Canvas y Mensajes */
     #gameCanvas {
-        margin-top: 40px !important;
+        height: calc(100vh - 120px) !important;
+    }
+
+    #levelMessage {
+        font-size: 1.1rem !important;
+        width: 80% !important;
+    }
+
+    /* 4. Footer y Pausa */
+    .game-footer {
+        height: 45px !important;
+        padding: 0 10px !important;
+    }
+
+    #instructions {
+        font-size: 0.65rem !important;
+        max-width: 70%;
+    }
+
+    #pauseButton {
+        padding: 5px 10px !important;
+        font-size: 0.7rem !important;
     }
 }
-  
