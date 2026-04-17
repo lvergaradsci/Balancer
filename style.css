@@ -906,86 +906,61 @@ body {
         gap: 20px;
     }
 }
-/* ============ REPARACIÓN ESTRUCTURAL: MODO CELULAR ============ */
+/* ============ CORRECCIÓN FINAL DE TANQUES PARA MÓVIL ============ */
 @media (max-width: 600px) {
-    /* 1. El Header: Lo hacemos ultra delgado */
-    .game-header {
-        height: 50px !important;
-        padding: 0 10px !important;
+    /* 1. Forzar el contenedor de tanques a ser horizontal y ocupar todo el ancho */
+    .tanks-container {
         display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        gap: 5px !important;
+        flex-direction: row !important; /* Asegura que estén uno al lado del otro */
+        justify-content: space-between !important; /* Uno a la izquierda, otro a la derecha */
+        position: absolute !important;
+        top: 60px !important; /* Justo debajo del header */
+        left: 0 !important;
+        right: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        padding: 0 10px !important;
+        pointer-events: none !important; /* Para que no estorben los clics en el centro */
     }
 
-    /* Escondemos los textos de "Ingeniero:", "PUNTOS", "COMBO" */
-    .engineer-name, .score-label, .combo-label, .indicator-label {
-        display: none !important;
-    }
-
-    /* Hacemos los valores más pequeños y compactos */
-    #engineerDisplay, #scoreValue, #comboMultiplier, #currentLevel {
-        font-size: 0.8rem !important;
+    /* 2. Ajuste de cada Tanque */
+    .tank {
+        width: 65px !important; /* Más delgados */
+        height: auto !important;
+        pointer-events: auto !important; /* Que vuelvan a ser clicables si es necesario */
         margin: 0 !important;
     }
 
-    /* Ocultamos la barra visual del combo, dejamos solo el multiplicador */
-    .combo-bar {
-        display: none !important;
+    /* 3. Limitar la altura del cuerpo del tanque (el vidrio) */
+    .tank-body {
+        height: 140px !important; /* Altura controlada para que no desaparezca arriba */
+        width: 100% !important;
+        border-width: 2px !important;
     }
 
-    /* Ocultamos la sección de Presión y Justicia en móvil (ocupa el 40% de la pantalla) */
-    .header-right {
-        display: none !important;
+    /* 4. Ajustar el fluido dentro del tanque */
+    .fluid {
+        width: 100% !important;
     }
 
-    /* 2. Los Tanques: Los hacemos más flacos para que no tapen el centro */
-    .tanks-container {
-        top: 60px !important;
-        padding: 0 10px !important;
-    }
-
-    .tank {
-        width: 70px !important; /* Más angostos */
-    }
-
+    /* 5. Etiquetas de Bienestar y Abuso (los textos arriba de los tanques) */
     .tank-label {
         font-size: 0.5rem !important;
-        line-height: 1 !important;
-        margin-bottom: 2px !important;
+        white-space: normal !important; /* Permite que el texto se parta en dos líneas */
+        height: 25px !important;
+        display: flex !important;
+        align-items: flex-end !important;
+        justify-content: center !important;
     }
 
-    .tank-body {
-        height: 120px !important; /* Más bajos */
+    /* 6. Los marcadores de 100%, 50% (si molestan, los hacemos minúsculos) */
+    .tank-markers span {
+        font-size: 0.5rem !important;
     }
 
+    /* 7. El valor numérico de abajo (0%) */
     .tank-value {
         font-size: 0.7rem !important;
-    }
-
-    /* 3. El Canvas y Mensajes */
-    #gameCanvas {
-        height: calc(100vh - 120px) !important;
-    }
-
-    #levelMessage {
-        font-size: 1.1rem !important;
-        width: 80% !important;
-    }
-
-    /* 4. Footer y Pausa */
-    .game-footer {
-        height: 45px !important;
-        padding: 0 10px !important;
-    }
-
-    #instructions {
-        font-size: 0.65rem !important;
-        max-width: 70%;
-    }
-
-    #pauseButton {
-        padding: 5px 10px !important;
-        font-size: 0.7rem !important;
+        margin-top: 5px !important;
     }
 }
