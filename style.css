@@ -906,86 +906,58 @@ body {
         gap: 20px;
     }
 }
-/* ============ ADAPTACIÓN PARA MÓVILES (SCALING) ============ */
+/* ============ CORRECCIÓN DE ESCALADO MÓVIL ============ */
 @media screen and (max-width: 768px) {
-    /* 1. Ajuste de la pantalla de inicio */
-    .game-title {
-        font-size: 2rem; /* Título más pequeño para evitar desbordes */
-    }
-    .game-subtitle {
-        font-size: 1.2rem;
-    }
-    .login-container {
-        padding: 20px;
-        width: 90%;
-    }
-
-    /* 2. Reorganización del Header del Juego */
-    .game-header {
-        flex-direction: column; /* Apila el header verticalmente */
-        gap: 15px;
-        padding: 15px;
-    }
-    .header-left, .header-center, .header-right {
+    /* 1. Prevenir que cualquier elemento expanda el ancho de la página */
+    html, body {
+        overflow-x: hidden;
         width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
     }
-    .indicator-panel {
+
+    /* 2. Ajustar los mensajes de nivel para que no se desborden */
+    .mission-card, .level-intro {
         width: 100%;
-        justify-content: space-around;
+        box-sizing: border-box;
+        padding: 10px;
+        text-align: center;
     }
 
-    /* 3. Ajuste de los Tanques de Bienestar y Abuso */
-    .tanks-container {
-        flex-direction: column; /* Apilar los tanques si hay poco espacio horizontal */
-        align-items: center;
-        gap: 20px;
-    }
-    .welfare-tank, .abuse-tank {
-        width: 80%; /* Tanques más anchos pero apilados */
-        height: 150px; /* Reducir altura en móviles */
-    }
-
-    /* 4. Controles (Válvulas) */
+    /* 3. Apilar las válvulas verticalmente (Este es tu desbordamiento principal en la imagen) */
     .game-controls {
         display: flex;
-        flex-direction: column; /* Apilar controles */
+        flex-direction: column; /* Cambia de lado-a-lado a arriba-abajo */
+        align-items: center;
         width: 100%;
-        padding: 10px;
-    }
-    .control-valve {
-        width: 100%; 
-        padding: 15px;
-        margin-bottom: 10px;
+        box-sizing: border-box;
+        padding: 0 15px;
     }
 
-    /* 5. Ajustes de modales (Pausa, Leaderboard, Level Complete) */
-    .complete-card, .pause-card, .leaderboard-card {
-        width: 95%;
-        padding: 20px;
-        max-height: 90vh; /* Evita que el modal sea más alto que la pantalla */
-        overflow-y: auto;
+    .control-valve {
+        width: 100%; /* Toma todo el ancho disponible del celular */
+        max-width: 100%;
+        box-sizing: border-box; /* Asegura que el padding no sume ancho extra */
+        margin-bottom: 15px; /* Separación entre las válvulas apiladas */
     }
-    
-    .button-group {
-        flex-direction: column;
+
+    /* 4. Ajustar los tanques para que quepan bien */
+    .tanks-container {
+        width: 100%;
+        box-sizing: border-box;
+        padding: 0 10px;
+        /* Si quieres mantenerlos uno al lado del otro, usa esto: */
+        display: flex;
+        justify-content: space-between;
         gap: 10px;
     }
-    
-    .button-group button {
-        width: 100%;
-    }
-}
 
-/* Para pantallas aún más pequeñas (teléfonos en vertical) */
-@media screen and (max-width: 480px) {
-    .game-title {
-        font-size: 1.6rem;
+    .welfare-tank, .abuse-tank {
+        width: 48%; /* Obliga a los tanques a dividirse el espacio sin salirse */
     }
-    .start-btn {
-        font-size: 1.2rem;
-        padding: 15px;
+
+    /* 5. Ajustar el Header superior */
+    .game-header {
+        flex-wrap: wrap; /* Permite que los elementos pasen a la siguiente línea si no caben */
+        padding: 10px;
+        box-sizing: border-box;
     }
 }
